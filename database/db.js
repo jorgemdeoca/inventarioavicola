@@ -11,14 +11,20 @@ const { createClient } = require('@libsql/client');
 const path = require('path');
 const fs = require('fs');
 
-// Asegurar que el directorio data existe (para modo local)
-const dataDir = path.join(__dirname, '..', 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-
 // Si no hay TURSO_DATABASE_URL en .env, usar SQLite local
-const DB_URL = process.env.TURSO_DATABASE_URL || `file:${path.join(dataDir, 'pollos.db')}`;
+const DB_URL = process.env.TURSO_DATABASE_URL || `file:${path.join(__dirname, '..', 'data', 'pollos.db')}`;
+
+// Solo asegurar que el directorio data existe si estamos usando SQLite local
+if (DB_URL.startsWith('file:')) {
+  const dataDir = path.join(__dirname, '..', 'data');
+  if (!fs.existsSync(dataDir)) {
+    try {
+      fs.mkdirSync(dataDir, { recursive: true });
+    } catch (e) {
+      console.warn('⚠️  No se pudo crear el directorio data (ignorar si estás en Vercel)');
+    }
+  }
+}
 
 const db = createClient({
   url: DB_URL,
