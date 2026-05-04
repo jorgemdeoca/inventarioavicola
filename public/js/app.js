@@ -178,6 +178,18 @@
 
     // Formulario de pago
     els.pagoForm.addEventListener('submit', handlePagoSubmit);
+
+    // Event Delegation para botones de la tabla Ventas
+    els.ventasBody.addEventListener('click', (e) => {
+      const btnEdit = e.target.closest('.action-edit');
+      if (btnEdit) return editVenta(btnEdit.dataset.id);
+
+      const btnPago = e.target.closest('.action-pago');
+      if (btnPago) return openPagoModal(btnPago.dataset.id);
+
+      const btnDelete = e.target.closest('.action-delete');
+      if (btnDelete) return deleteVenta(btnDelete.dataset.id);
+    });
   }
 
   // =============================================
@@ -223,9 +235,9 @@
           <td class="${debeClass}">$${v.monto_pendiente.toFixed(2)}</td>
           <td>
             <div class="td-actions">
-              <button class="btn--icon" onclick="App.editVenta(${v.id})" title="Editar">✏️</button>
-              <button class="btn--icon" onclick="App.openPagoModal(${v.id})" title="Pago">💵</button>
-              <button class="btn--icon" onclick="App.deleteVenta(${v.id})" title="Eliminar">🗑️</button>
+              <button class="btn btn--icon action-edit" data-id="${v.id}" title="Editar">✏️</button>
+              <button class="btn btn--icon action-pago" data-id="${v.id}" title="Pago">💵</button>
+              <button class="btn btn--icon action-delete" data-id="${v.id}" title="Eliminar">🗑️</button>
             </div>
           </td>
         </tr>

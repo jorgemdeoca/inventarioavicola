@@ -133,6 +133,15 @@
         loadGastos();
       });
     });
+
+    // Event Delegation para botones de la tabla Gastos
+    els.gastosBody.addEventListener('click', (e) => {
+      const btnEdit = e.target.closest('.action-edit');
+      if (btnEdit) return editGasto(btnEdit.dataset.id);
+
+      const btnDelete = e.target.closest('.action-delete');
+      if (btnDelete) return deleteGasto(btnDelete.dataset.id);
+    });
   }
 
   // =============================================
@@ -182,8 +191,8 @@
           <td class="td-bold td-danger">-$${g.total.toFixed(2)}</td>
           <td>
             <div class="td-actions">
-              <button type="button" class="btn--icon" onclick="GastosApp.editGasto(${g.id})" title="Editar">✏️</button>
-              <button type="button" class="btn--icon" onclick="GastosApp.deleteGasto(${g.id})" title="Eliminar">🗑️</button>
+              <button type="button" class="btn--icon action-edit" data-id="${g.id}" title="Editar">✏️</button>
+              <button type="button" class="btn--icon action-delete" data-id="${g.id}" title="Eliminar">🗑️</button>
             </div>
           </td>
         </tr>
