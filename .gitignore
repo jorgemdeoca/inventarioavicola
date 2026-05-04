@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Base de datos LOCAL — Los datos van en Turso, no en GitHub
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Variables de entorno con secretos — NUNCA subir a GitHub
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

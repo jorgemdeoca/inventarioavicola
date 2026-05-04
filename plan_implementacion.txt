@@ -1,0 +1,152 @@
+================================================================================
+    PLAN DE IMPLEMENTACIÓN — SISTEMA DE GESTIÓN DE POLLOS
+    Fecha: 03/05/2026
+================================================================================
+
+1. DESCRIPCIÓN DEL PROYECTO
+   Sistema local para el control y gestión de ventas de pollos.
+   Permite registrar ventas con datos del cliente, cantidades, precios,
+   pesos en kilogramos, y control de pagos (total, parcial, pendiente).
+   Incluye dashboard estadístico y búsqueda avanzada.
+
+================================================================================
+
+2. TECH STACK
+   - Frontend:  HTML5 + CSS3 + Vanilla JavaScript
+   - Backend:   Node.js + Express.js
+   - Base Datos: SQLite3 (better-sqlite3)
+   - Diseño UI: Stitch (Google) + CSS Custom (glassmorphism)
+   - Puerto:    http://localhost:3000
+
+================================================================================
+
+3. ARQUITECTURA DE BASE DE DATOS
+
+   Tabla: ventas
+   ┌────────────────────┬──────────┬──────────────────────────────────┐
+   │ Campo              │ Tipo     │ Restricciones                    │
+   ├────────────────────┼──────────┼──────────────────────────────────┤
+   │ id                 │ INTEGER  │ PRIMARY KEY AUTOINCREMENT        │
+   │ fecha              │ TEXT     │ NOT NULL, DEFAULT datetime local  │
+   │ cliente_nombre     │ TEXT     │ NOT NULL, CHECK(length >= 2)     │
+   │ descripcion        │ TEXT     │ DEFAULT ''                       │
+   │ cantidad_pollos    │ INTEGER  │ NOT NULL, CHECK(> 0)             │
+   │ precio_por_kg      │ REAL     │ NOT NULL, CHECK(> 0)             │
+   │ peso_total_kg      │ REAL     │ NOT NULL, CHECK(> 0)             │
+   │ total_venta        │ REAL     │ NOT NULL, CHECK(>= 0)            │
+   │ estado_pago        │ TEXT     │ pendiente | parcial | pagado     │
+   │ monto_pagado       │ REAL     │ NOT NULL, DEFAULT 0              │
+   │ monto_pendiente    │ REAL     │ NOT NULL, DEFAULT 0              │
+   │ created_at         │ TEXT     │ NOT NULL, DEFAULT datetime local  │
+   │ updated_at         │ TEXT     │ NOT NULL, DEFAULT datetime local  │
+   └────────────────────┴──────────┴──────────────────────────────────┘
+
+   Indices:
+   - idx_ventas_cliente (cliente_nombre) — Búsqueda por nombre
+   - idx_ventas_estado  (estado_pago)    — Filtro por estado
+   - idx_ventas_fecha   (fecha DESC)     — Ordenamiento
+
+   Triggers:
+   - trg_ventas_updated_at: Actualiza updated_at al editar
+
+================================================================================
+
+4. API REST — ENDPOINTS
+
+   GET    /api/ventas              → Listar ventas (con ?q=nombre&estado=)
+   GET    /api/ventas/:id          → Obtener una venta
+   POST   /api/ventas              → Crear nueva venta
+   PUT    /api/ventas/:id          → Actualizar venta completa
+   PATCH  /api/ventas/:id/pago     → Actualizar estado de pago
+   DELETE /api/ventas/:id          → Eliminar venta
+   GET    /api/estadisticas        → Estadísticas generales
+
+================================================================================
+
+5. ESTRUCTURA DE ARCHIVOS
+
+   gestion pollos/
+   ├── package.json
+   ├── server.js
+   ├── database/
+   │   └── db.js
+   ├── routes/
+   │   └── ventas.js
+   ├── controllers/
+   │   └── ventasController.js
+   ├── data/
+   │   └── pollos.db (generado automáticamente)
+   ├── public/
+   │   ├── index.html
+   │   ├── css/
+   │   │   └── styles.css
+   │   └── js/
+   │       ├── app.js
+   │       ├── api.js
+   │       ├── validation.js
+   │       └── stats.js
+   └── plan_implementacion.txt
+
+================================================================================
+
+6. PASOS DE IMPLEMENTACIÓN
+
+   FASE 1: FUNDACIÓN (Backend + BD)
+   [X] Paso 1 — Inicializar proyecto Node.js (npm init)
+   [X] Paso 2 — Instalar dependencias (express, better-sqlite3, cors)
+   [X] Paso 3 — Crear módulo de base de datos con migración automática
+   [X] Paso 4 — Crear controladores CRUD con prepared statements
+   [X] Paso 5 — Crear rutas REST API
+   [X] Paso 6 — Configurar servidor Express con middleware
+
+   FASE 2: FRONTEND
+   [X] Paso 7 — Crear index.html con layout semántico y accesible
+   [X] Paso 8 — Diseñar sistema de estilos CSS (dark theme, glassmorphism)
+   [X] Paso 9 — Implementar módulo API client (api.js)
+   [X] Paso 10 — Implementar validación en tiempo real (validation.js)
+   [X] Paso 11 — Implementar estadísticas del dashboard (stats.js)
+   [X] Paso 12 — Implementar lógica principal (app.js)
+
+   FASE 3: UI/UX CON STITCH
+   [X] Paso 13 — Crear proyecto en Stitch
+   [X] Paso 14 — Crear design system (colores, tipografía, formas)
+   [X] Paso 15 — Generar pantallas del dashboard y formulario
+
+   FASE 4: VERIFICACIÓN
+   [X] Paso 16 — Arrancar servidor y verificar API
+   [X] Paso 17 — Probar formulario con validación
+   [X] Paso 18 — Verificar cálculos automáticos
+   [X] Paso 19 — Probar flujo: crear → pago parcial → pago completo
+
+================================================================================
+
+7. VALIDACIÓN EN TIEMPO REAL
+
+   - Campo vacío → Borde rojo + mensaje de error
+   - Número negativo → "Debe ser mayor a 0"
+   - Nombre corto → "Mínimo 2 caracteres"
+   - Auto-cálculo: Total = Peso (Kg) × Precio/Kg
+   - Monto pagado > total → Error "No puede exceder el total"
+   - Feedback visual inmediato (colores verdes/rojos)
+
+================================================================================
+
+8. ESTADÍSTICAS DEL DASHBOARD
+
+   KPI 1: Total de pollos vendidos (suma cantidad_pollos)
+   KPI 2: Peso total en Kg (suma peso_total_kg)
+   KPI 3: Ganancias totales en USD (suma total_venta)
+   KPI 4: Total por cobrar en USD (suma monto_pendiente)
+   
+   Pills: Ventas pagadas | Parciales | Pendientes | Precio promedio/Kg
+
+================================================================================
+
+9. CÓMO EJECUTAR
+
+   1. Abrir terminal en la carpeta del proyecto
+   2. Ejecutar: npm start
+   3. Abrir navegador en: http://localhost:3000
+   4. ¡Listo! La base de datos se crea automáticamente
+
+================================================================================

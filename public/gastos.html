@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💸 Gestión de Gastos — Inventario &amp; Ventas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Estilos específicos para la página de gastos */
+    .kpi-card--gastos::before { background: var(--danger); }
+    .badge--comida { background: var(--info-bg); color: var(--info); }
+    .badge--pollos { background: var(--warning-bg); color: var(--warning); }
+    .badge--otro { background: var(--text-muted); color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header__container">
+      <div class="header__brand">
+        <span class="header__icon">💸</span>
+        <div>
+          <h1 class="header__title">Gestión de Gastos</h1>
+          <p class="header__subtitle">Control de crianza e insumos</p>
+        </div>
+      </div>
+      <div class="header__actions">
+        <button id="themeToggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
+        <a href="index.html" class="btn btn--ghost">🐔 Volver a Ventas</a>
+        <div class="user-info" id="userInfoBar">
+          <span class="user-info__name" id="userDisplay">...</span>
+          <button id="btnLogout" class="btn btn--ghost btn--sm" title="Cerrar sesión">🚪 Salir</button>
+        </div>
+        <button id="btnNuevoGasto" class="btn btn--danger btn--glow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M12 5v14M5 12h14"/></svg>
+          Nuevo Gasto
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- KPIs -->
+    <section class="dashboard" id="dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-card--gastos"><div class="kpi-card__icon">💸</div><div class="kpi-card__content"><span class="kpi-card__value" id="statTotalGastos">$0.00</span><span class="kpi-card__label">Gastos Totales</span></div></div>
+        <div class="kpi-card kpi-card--peso"><div class="kpi-card__icon">🌾</div><div class="kpi-card__content"><span class="kpi-card__value" id="statGastoComida">$0.00</span><span class="kpi-card__label">Sacos de Comida</span></div></div>
+        <div class="kpi-card kpi-card--pollos"><div class="kpi-card__icon">🐣</div><div class="kpi-card__content"><span class="kpi-card__value" id="statGastoPollos">$0.00</span><span class="kpi-card__label">Compra de Pollos</span></div></div>
+        <div class="kpi-card kpi-card--pendiente"><div class="kpi-card__icon">📦</div><div class="kpi-card__content"><span class="kpi-card__value" id="statGastoOtros">$0.00</span><span class="kpi-card__label">Otros Gastos</span></div></div>
+      </div>
+    </section>
+
+    <!-- FILTROS -->
+    <section class="filters" id="filters">
+      <div class="filter-tabs">
+        <button class="filter-tab filter-tab--active" data-filter="todos" id="filterTodos">Todos</button>
+        <button class="filter-tab" data-filter="saco_comida" id="filterComida">🌾 Sacos de Comida</button>
+        <button class="filter-tab" data-filter="pollos_cria" id="filterPollos">🐣 Pollos de Cría</button>
+        <button class="filter-tab" data-filter="otro" id="filterOtro">📦 Otros</button>
+      </div>
+    </section>
+
+    <!-- TABLA -->
+    <section class="ventas-section" id="gastosSection">
+      <div class="table-container">
+        <table class="ventas-table" id="gastosTable">
+          <thead><tr>
+            <th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Cantidad</th><th>Monto Unit. ($)</th><th>Total ($)</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="gastosBody"></tbody>
+        </table>
+        <div class="empty-state hidden" id="emptyState">
+          <div class="empty-state__icon">💸</div>
+          <h3 class="empty-state__title">No hay gastos registrados</h3>
+          <p class="empty-state__text">Haz clic en "Nuevo Gasto" para comenzar</p>
+        </div>
+        <div class="loader hidden" id="loader"><div class="loader__spinner"></div><span>Cargando...</span></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL GASTO -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modalTitle">Nuevo Gasto</h2>
+        <button class="modal__close" id="modalClose" aria-label="Cerrar">&times;</button>
+      </div>
+      <form class="form" id="gastoForm" novalidate>
+        <input type="hidden" id="gastoId" value="">
+        
+        <div class="form__row form__row--grid">
+          <div class="form__group">
+            <label for="categoriaGasto" class="form__label">Categoría <span class="required">*</span></label>
+            <select id="categoriaGasto" class="form__input" required>
+              <option value="" disabled selected>Selecciona una categoría...</option>
+              <option value="saco_comida">Saco de comida</option>
+              <option value="pollos_cria">Compra de pollos (Cría)</option>
+              <option value="otro">Otro gasto</option>
+            </select>
+            <span class="form__error" id="errorCategoriaGasto"></span>
+          </div>
+          <div class="form__group">
+            <label for="cantidadGasto" class="form__label">Cantidad <span class="required">*</span></label>
+            <input type="number" id="cantidadGasto" class="form__input" placeholder="Ej: 5" required min="1" step="1" value="1">
+            <span class="form__error" id="errorCantidadGasto"></span>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__group">
+            <label for="descripcionGasto" class="form__label">Descripción <span id="descRequired" class="required hidden">*</span></label>
+            <input type="text" id="descripcionGasto" class="form__input" placeholder="Ej: Sacos de maíz iniciador..." maxlength="200" autocomplete="off">
+            <span class="form__error" id="errorDescripcionGasto"></span>
+          </div>
+        </div>
+        
+        <div class="form__row form__row--grid">
+          <div class="form__group">
+            <label for="montoGasto" class="form__label">Costo Unitario (USD) <span class="required">*</span></label>
+            <div class="form__input-wrapper">
+              <span class="form__input-prefix">$</span>
+              <input type="number" id="montoGasto" class="form__input form__input--prefix" placeholder="0.00" required min="0.01" step="0.01">
+            </div>
+            <span class="form__error" id="errorMontoGasto"></span>
+          </div>
+          <div class="form__group">
+            <label class="form__label">Total del Gasto</label>
+            <div class="form__total form__pending" id="totalGastoDisplay" style="color:var(--danger)">$0.00</div>
+          </div>
+        </div>
+        
+        <div class="form__divider"></div>
+        <div class="form__actions">
+          <button type="button" class="btn btn--ghost" id="btnCancelar">Cancelar</button>
+          <button type="submit" class="btn btn--danger btn--glow" id="btnGuardar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+            Guardar Gasto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOASTS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/gastos.js"></script>
+</body>
+</html>
