@@ -11,7 +11,6 @@
 <!-- Material Symbols Outlined -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/styles.css">
 <!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
@@ -200,16 +199,16 @@
 <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary-container ring-2 ring-surface-container-low"></span>
 </button>
 <!-- Trailing Icon Action: Settings/Tune -->
-<button class="w-9 h-9 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-on-surface transition-colors duration-150 active:scale-95" title="Ajustes de Sistema" id="themeToggle">
+<button class="w-9 h-9 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-on-surface transition-colors duration-150 active:scale-95" title="Ajustes de Sistema">
 <span class="material-symbols-outlined text-[20px]">tune</span>
 </button>
 <!-- Primary Action: Nueva Venta -->
-<button id="btnNuevaVenta" class="bg-primary-container hover:bg-surface-tint text-on-primary-container font-label-lg text-label-lg px-4 py-2 rounded-lg transition-all shadow-lg shadow-black/40 amber-btn-glow active:scale-95 flex items-center gap-1.5">
+<button class="bg-primary-container hover:bg-surface-tint text-on-primary-container font-label-lg text-label-lg px-4 py-2 rounded-lg transition-all shadow-lg shadow-black/40 amber-btn-glow active:scale-95 flex items-center gap-1.5">
 <span class="material-symbols-outlined text-[18px]">add</span>
 <span>Nueva Venta</span>
 </button>
 <!-- Profile Chip -->
-<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30" id="btnLogout" style="cursor:pointer" title="Cerrar Sesi�n">
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30">
 <div class="relative w-9 h-9 rounded-lg bg-surface-container-highest overflow-hidden border border-outline-variant/40 flex items-center justify-center">
 <span class="material-symbols-outlined text-[22px] text-primary">account_circle</span>
 </div>
@@ -324,7 +323,7 @@
 <span class="px-2 py-0.5 rounded-full bg-surface-container-high border border-outline-variant/30 text-label-sm font-label-sm text-on-surface-variant">Acumulado</span>
 </div>
 <div class="mt-4">
-<div id="statTotalPeso" class="text-metric-display font-metric-display text-on-surface">0 <span class="text-headline-sm font-headline-sm font-normal text-outline">kg</span></div>
+<div class="text-metric-display font-metric-display text-on-surface">18,420 <span class="text-headline-sm font-headline-sm font-normal text-outline">kg</span></div>
 <p class="text-body-sm font-body-sm text-secondary flex items-center gap-1 mt-1">
 <span class="material-symbols-outlined text-[16px]">verified</span>
               Rendimiento canal óptimo: 88.4%
@@ -411,7 +410,7 @@
             </span>
 </div>
 <div class="mt-4">
-<div id="statTotalPollos" class="text-metric-display font-metric-display text-on-surface">0 <span class="text-headline-sm font-headline-sm font-normal text-outline">aves vendidas</span></div>
+<div class="text-metric-display font-metric-display text-on-surface">12,450 <span class="text-headline-sm font-headline-sm font-normal text-outline">aves en pie</span></div>
 <p class="text-body-sm font-body-sm text-secondary flex items-center gap-1 mt-1">
 <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
               Mortalidad: 1.2% (rango óptimo &lt; 2.5%)
@@ -455,10 +454,10 @@
 </div>
 <!-- Status Filters -->
 <div class="flex items-center p-1 rounded-lg bg-surface-container-lowest border border-outline-variant/30 text-label-sm font-label-sm">
-<button id="filterTodos" class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-semibold filter-chip active" data-filter="Todos">Todos</button>
-<button id="filterPagado" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Pagado">Pagado</button>
-<button id="filterPendiente" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Pendiente">Pendiente</button>
-<button id="filterParcial" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Parcial">Parcial</button>
+<button class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-semibold">Todos (28)</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Pagados (22)</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Pendientes (4)</button>
+<button class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors">Parciales (2)</button>
 </div>
 </div>
 </div>
@@ -477,7 +476,198 @@
 <th class="py-3 px-4 text-center">Acciones</th>
 </tr>
 </thead>
-<tbody id="ventasBody" class="divide-y divide-outline-variant/15 text-body-sm font-body-sm"></tbody>
+<tbody class="divide-y divide-outline-variant/15 text-body-sm font-body-sm">
+<!-- Row 1: Avícola San Jorge -->
+<tr class="hover:bg-primary-container/[0.04] transition-colors group">
+<td class="py-3.5 px-4 text-on-surface">
+<div class="font-medium">24 Oct, 2023</div>
+<div class="text-label-sm font-label-sm text-outline">10:30 AM • REM-8942</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors">Avícola San Jorge</div>
+<div class="text-label-sm font-label-sm text-outline">Distribuidor Mayorista • RIF J-408192</div>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                350 <span class="text-label-sm font-label-sm text-outline font-normal">pollos</span>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                840 <span class="text-label-sm font-label-sm text-outline font-normal">kg</span>
+</td>
+<td class="py-3.5 px-4 text-right text-outline">
+                $2.65 / kg
+              </td>
+<td class="py-3.5 px-4 text-right font-bold text-on-surface">
+                $2,226.00 <span class="text-label-sm font-label-sm font-normal text-outline">USD</span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/15 text-secondary text-label-sm font-label-sm font-semibold border border-secondary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Pagado
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Ver Recibo">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Descargar Remisión">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Pollería El Buen Sabor -->
+<tr class="hover:bg-primary-container/[0.04] transition-colors group">
+<td class="py-3.5 px-4 text-on-surface">
+<div class="font-medium">24 Oct, 2023</div>
+<div class="text-label-sm font-label-sm text-outline">09:15 AM • REM-8941</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors">Pollería El Buen Sabor</div>
+<div class="text-label-sm font-label-sm text-outline">Cadena Comercial • 4 Sucursales</div>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                1,200 <span class="text-label-sm font-label-sm text-outline font-normal">pollos</span>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                2,880 <span class="text-label-sm font-label-sm text-outline font-normal">kg</span>
+</td>
+<td class="py-3.5 px-4 text-right text-outline">
+                $2.60 / kg
+              </td>
+<td class="py-3.5 px-4 text-right font-bold text-primary-container">
+                $7,488.00 <span class="text-label-sm font-label-sm font-normal text-outline">USD</span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/15 text-primary-container text-label-sm font-label-sm font-semibold border border-primary-container/30">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span> Pendiente
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Ver Recibo">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Descargar Remisión">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Distribuidora Central -->
+<tr class="hover:bg-primary-container/[0.04] transition-colors group">
+<td class="py-3.5 px-4 text-on-surface">
+<div class="font-medium">23 Oct, 2023</div>
+<div class="text-label-sm font-label-sm text-outline">04:45 PM • REM-8940</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors">Distribuidora Central</div>
+<div class="text-label-sm font-label-sm text-outline">Poder de Compra A+ • Frigorífico</div>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                800 <span class="text-label-sm font-label-sm text-outline font-normal">pollos</span>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                1,960 <span class="text-label-sm font-label-sm text-outline font-normal">kg</span>
+</td>
+<td class="py-3.5 px-4 text-right text-outline">
+                $2.62 / kg
+              </td>
+<td class="py-3.5 px-4 text-right font-bold text-on-surface">
+                $5,135.20 <span class="text-label-sm font-label-sm font-normal text-outline">USD</span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/15 text-secondary text-label-sm font-label-sm font-semibold border border-secondary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Pagado
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Ver Recibo">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Descargar Remisión">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Mercado Mayorista Este -->
+<tr class="hover:bg-primary-container/[0.04] transition-colors group">
+<td class="py-3.5 px-4 text-on-surface">
+<div class="font-medium">23 Oct, 2023</div>
+<div class="text-label-sm font-label-sm text-outline">02:10 PM • REM-8939</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors">Mercado Mayorista Este</div>
+<div class="text-label-sm font-label-sm text-outline">Puesto 14 al 18 • Crédito Activo</div>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                500 <span class="text-label-sm font-label-sm text-outline font-normal">pollos</span>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                1,210 <span class="text-label-sm font-label-sm text-outline font-normal">kg</span>
+</td>
+<td class="py-3.5 px-4 text-right text-outline">
+                $2.68 / kg
+              </td>
+<td class="py-3.5 px-4 text-right font-bold text-on-surface">
+                $3,242.80 <span class="text-label-sm font-label-sm font-normal text-outline">USD</span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-400/10 text-blue-400 text-label-sm font-label-sm font-semibold border border-blue-400/20">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Parcial (50%)
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Ver Recibo">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Descargar Remisión">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Rosticería Doña Rosa -->
+<tr class="hover:bg-primary-container/[0.04] transition-colors group">
+<td class="py-3.5 px-4 text-on-surface">
+<div class="font-medium">23 Oct, 2023</div>
+<div class="text-label-sm font-label-sm text-outline">11:00 AM • REM-8938</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-semibold text-on-surface group-hover:text-primary transition-colors">Rosticería Doña Rosa</div>
+<div class="text-label-sm font-label-sm text-outline">Cliente Minorista Frecuente</div>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                80 <span class="text-label-sm font-label-sm text-outline font-normal">pollos</span>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-on-surface">
+                192 <span class="text-label-sm font-label-sm text-outline font-normal">kg</span>
+</td>
+<td class="py-3.5 px-4 text-right text-outline">
+                $2.75 / kg
+              </td>
+<td class="py-3.5 px-4 text-right font-bold text-on-surface">
+                $528.00 <span class="text-label-sm font-label-sm font-normal text-outline">USD</span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/15 text-secondary text-label-sm font-label-sm font-semibold border border-secondary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Pagado
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Ver Recibo">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 rounded-md hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors" title="Descargar Remisión">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
 </table>
 </div>
 <!-- Pagination Footer -->
@@ -519,5 +709,4 @@
 </div>
 </footer>
 </main>
-
 </body></html>
