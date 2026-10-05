@@ -455,10 +455,10 @@
 </div>
 <!-- Status Filters -->
 <div class="flex items-center p-1 rounded-lg bg-surface-container-lowest border border-outline-variant/30 text-label-sm font-label-sm">
-<button id="filterTodos" class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-semibold filter-chip active" data-filter="Todos">Todos</button>
-<button id="filterPagado" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Pagado">Pagado</button>
-<button id="filterPendiente" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Pendiente">Pendiente</button>
-<button id="filterParcial" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-chip" data-filter="Parcial">Parcial</button>
+<button id="filterTodos" class="px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-semibold filter-tab active" data-filter="Todos">Todos</button>
+<button id="filterPagado" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-tab" data-filter="Pagado">Pagado</button>
+<button id="filterPendiente" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-tab" data-filter="Pendiente">Pendiente</button>
+<button id="filterParcial" class="px-2.5 py-1 rounded text-on-surface-variant hover:text-on-surface transition-colors filter-tab" data-filter="Parcial">Parcial</button>
 </div>
 </div>
 </div>
@@ -478,7 +478,7 @@
 </tr>
 </thead>
 <tbody id="ventasBody" class="divide-y divide-outline-variant/15 text-body-sm font-body-sm"></tbody>
-</table>
+</table><div id="emptyState" style="display:none;"></div><div id="loader" style="display:none;"></div>
 </div>
 <!-- Pagination Footer -->
 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
