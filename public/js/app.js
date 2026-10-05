@@ -212,6 +212,13 @@
   function renderVentas(ventas) {
     if (!ventas || ventas.length === 0) {
       els.ventasBody.innerHTML = '';
+      if (searchQuery || currentFilter !== 'todos') {
+        els.emptyState.querySelector('.empty-state__title').textContent = 'No se encontraron resultados';
+        els.emptyState.querySelector('.empty-state__text').textContent = 'Intenta con otra búsqueda o filtro.';
+      } else {
+        els.emptyState.querySelector('.empty-state__title').textContent = 'No hay ventas registradas';
+        els.emptyState.querySelector('.empty-state__text').textContent = 'Haz clic en "Nueva Venta" para comenzar';
+      }
       els.emptyState.classList.remove('hidden');
       return;
     }
@@ -235,9 +242,9 @@
           <td class="${debeClass}">$${v.monto_pendiente.toFixed(2)}</td>
           <td>
             <div class="td-actions">
-              <button class="btn btn--icon action-edit" data-id="${v.id}" title="Editar">✏️</button>
-              <button class="btn btn--icon action-pago" data-id="${v.id}" title="Pago">💵</button>
-              <button class="btn btn--icon action-delete" data-id="${v.id}" title="Eliminar">🗑️</button>
+              <button class="btn btn--icon action-edit" data-id="${v.id}" title="Editar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+              <button class="btn btn--icon action-pago" data-id="${v.id}" title="Pago"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></button>
+              <button class="btn btn--icon action-delete" data-id="${v.id}" title="Eliminar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
             </div>
           </td>
         </tr>
@@ -247,9 +254,9 @@
 
   function getEstadoBadge(estado) {
     const map = {
-      pagado: '<span class="badge badge--pagado">✅ Pagado</span>',
-      parcial: '<span class="badge badge--parcial">⚠️ Parcial</span>',
-      pendiente: '<span class="badge badge--pendiente">🔴 Pendiente</span>'
+      pagado: '<span class="badge badge--pagado"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Pagado</span>',
+      parcial: '<span class="badge badge--parcial"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg> Parcial</span>',
+      pendiente: '<span class="badge badge--pendiente"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><circle cx="12" cy="12" r="10"/></svg> Pendiente</span>'
     };
     return map[estado] || map.pendiente;
   }
@@ -259,7 +266,7 @@
   // =============================================
   function openNewVentaModal() {
     editingId = null;
-    els.modalTitle.textContent = '🐔 Nueva Venta';
+    els.modalTitle.textContent = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M16 7h.01"/><path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/><path d="m20 7 2 .5-2 .5"/><path d="M10 18v3"/><path d="M14 17.75V21"/><path d="M7 18a6 6 0 0 0 3.84-10.61"/></svg> Nueva Venta';
     els.btnGuardar.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -277,7 +284,7 @@
       if (res.success) {
         editingId = id;
         const v = res.data;
-        els.modalTitle.textContent = '✏️ Editar Venta';
+        els.modalTitle.textContent = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Editar Venta';
         els.btnGuardar.innerHTML = `
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -334,11 +341,11 @@
     // Estado de pago visual
     let estadoHTML;
     if (pagado >= total && total > 0) {
-      estadoHTML = '<span class="badge badge--pagado">✅ Pagado</span>';
+      estadoHTML = '<span class="badge badge--pagado"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Pagado</span>';
     } else if (pagado > 0 && total > 0) {
-      estadoHTML = '<span class="badge badge--parcial">⚠️ Parcial</span>';
+      estadoHTML = '<span class="badge badge--parcial"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg> Parcial</span>';
     } else {
-      estadoHTML = '<span class="badge badge--pendiente">⏳ Pendiente</span>';
+      estadoHTML = '<span class="badge badge--pendiente"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg> Pendiente</span>';
     }
     els.pagoStatusDisplay.innerHTML = estadoHTML;
   }
@@ -351,6 +358,8 @@
 
     if (!Validator.validateForm()) {
       showToast('Corrige los errores del formulario', 'error');
+      const firstInvalid = $('.form__input--invalid');
+      if (firstInvalid) firstInvalid.focus();
       return;
     }
 
@@ -474,7 +483,7 @@
   // TOAST NOTIFICATIONS
   // =============================================
   function showToast(message, type = 'info') {
-    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const icons = { success: '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', error: '❌', info: 'ℹ️' };
     const toast = document.createElement('div');
     toast.className = `toast toast--${type}`;
     toast.innerHTML = `
@@ -492,6 +501,8 @@
   function showLoader(show) {
     const loader = $('#loader');
     if (loader) loader.classList.toggle('hidden', !show);
+    const tableContainer = $('.table-container');
+    if (tableContainer) tableContainer.setAttribute('aria-busy', show ? 'true' : 'false');
   }
 
   function formatDate(dateStr) {
