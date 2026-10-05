@@ -162,9 +162,9 @@
 
   function getCategoriaBadge(cat) {
     const map = {
-      saco_comida: '<span class="badge badge--comida"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M2 22 22 2"/><path d="M11 11a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/><path d="M11 15a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/><path d="M15 11a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/><path d="M15 15a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/><path d="M7 19a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/><path d="M19 7a4 4 0 0 1-5.66-5.66l5.66 5.66Z"/></svg> Comida</span>',
-      pollos_cria: '<span class="badge badge--pollos"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M12 22c4.4 0 8-4.4 8-9.8S16.4 2 12 2 4 6.8 4 12.2 7.6 22 12 22Z"/></svg> Pollos (Cría)</span>',
-      otro: '<span class="badge badge--otro"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Otro</span>'
+      saco_comida: '<span class="badge badge--comida">🌾 Comida</span>',
+      pollos_cria: '<span class="badge badge--pollos">🐣 Pollos (Cría)</span>',
+      otro: '<span class="badge badge--otro">📦 Otro</span>'
     };
     return map[cat] || map.otro;
   }
@@ -172,13 +172,6 @@
   function renderGastos(gastos) {
     if (!gastos || gastos.length === 0) {
       els.gastosBody.innerHTML = '';
-      if (currentFilter !== 'todos') {
-        els.emptyState.querySelector('.empty-state__title').textContent = 'No se encontraron resultados';
-        els.emptyState.querySelector('.empty-state__text').textContent = 'Intenta con otro filtro de categoría.';
-      } else {
-        els.emptyState.querySelector('.empty-state__title').textContent = 'No hay gastos registrados';
-        els.emptyState.querySelector('.empty-state__text').textContent = 'Haz clic en "Nuevo Gasto" para comenzar';
-      }
       els.emptyState.classList.remove('hidden');
       return;
     }
@@ -198,8 +191,8 @@
           <td class="td-bold td-danger">-$${g.total.toFixed(2)}</td>
           <td>
             <div class="td-actions">
-              <button type="button" class="btn--icon action-edit" data-id="${g.id}" title="Editar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
-              <button type="button" class="btn--icon action-delete" data-id="${g.id}" title="Eliminar"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+              <button type="button" class="btn--icon action-edit" data-id="${g.id}" title="Editar">✏️</button>
+              <button type="button" class="btn--icon action-delete" data-id="${g.id}" title="Eliminar">🗑️</button>
             </div>
           </td>
         </tr>
@@ -236,7 +229,7 @@
   // =============================================
   function openNuevoGastoModal() {
     editingId = null;
-    els.modalTitle.textContent = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Nuevo Gasto';
+    els.modalTitle.textContent = '💸 Nuevo Gasto';
     els.btnGuardar.innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -254,7 +247,7 @@
       if (res.success) {
         editingId = id;
         const g = res.data;
-        els.modalTitle.textContent = '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Editar Gasto';
+        els.modalTitle.textContent = '✏️ Editar Gasto';
         els.btnGuardar.innerHTML = `
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -335,8 +328,6 @@
 
     if (hasErrors) {
       showToast('Corrige los errores del formulario', 'error');
-      const firstInvalid = $('.form__input--invalid');
-      if (firstInvalid) firstInvalid.focus();
       return;
     }
 
@@ -380,7 +371,7 @@
   // TOAST NOTIFICATIONS
   // =============================================
   function showToast(message, type = 'info') {
-    const icons = { success: '<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>', error: '❌', info: 'ℹ️' };
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
     const toast = document.createElement('div');
     toast.className = `toast toast--${type}`;
     toast.innerHTML = `
@@ -398,8 +389,6 @@
   function showLoader(show) {
     const loader = $('#loader');
     if (loader) loader.classList.toggle('hidden', !show);
-    const tableContainer = $('.table-container');
-    if (tableContainer) tableContainer.setAttribute('aria-busy', show ? 'true' : 'false');
   }
 
   function formatDate(dateStr) {
