@@ -22,10 +22,10 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc:  ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+      scriptSrc:  ["'self'", "'unsafe-inline'", "'unsafe-eval'", "fonts.googleapis.com", "cdn.tailwindcss.com"],
       "script-src-attr": ["'unsafe-inline'"],
-      styleSrc:   ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com"],
-      fontSrc:    ["'self'", "fonts.googleapis.com", "fonts.gstatic.com"],
+      styleSrc:   ["'self'", "'unsafe-inline'", "fonts.googleapis.com", "fonts.gstatic.com", "cdn.tailwindcss.com"],
+      fontSrc:    ["'self'", "fonts.googleapis.com", "fonts.gstatic.com", "fonts.gstatic.com"],
       imgSrc:     ["'self'", "data:"],
       connectSrc: ["'self'"]
     }
