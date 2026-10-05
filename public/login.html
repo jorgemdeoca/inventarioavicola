@@ -192,9 +192,8 @@
               </span>
 </div>
 </div>
-<div class="hidden bg-red-500/10 border border-red-500/30 text-red-400 text-sm p-3 rounded-lg flex items-center gap-2 mb-4" id="alertError" role="alert"><span class="material-symbols-outlined text-[18px]">error</span><span id="alertMsg">Error al iniciar sesi�n</span></div>
 <!-- Form Fields Stack -->
-<form class="space-y-5" id="loginForm" novalidate>
+<form class="space-y-5" onsubmit="event.preventDefault();">
 <!-- Field: Usuario -->
 <div class="space-y-1.5">
 <div class="flex justify-between items-center">
@@ -207,7 +206,11 @@
 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
 <span class="material-symbols-outlined text-[20px]">person</span>
 </div>
-\n<span class="text-red-400 text-xs mt-1 block" id="errorUsername"></span>
+<input autocomplete="username" class="w-full bg-surface-container-lowest/80 border border-outline-variant/30 text-on-surface placeholder-outline font-body-md text-body-md rounded-lg pl-10 pr-10 py-3 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" id="username" placeholder="ej. operador.granja" required="" type="text" value="admin.galpon1"/>
+<span class="text-red-400 text-xs mt-1 block" id="errorUsername"></span>
+<div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-secondary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</div>
 </div>
 </div>
 <!-- Field: Contraseña -->
@@ -224,7 +227,12 @@
 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
 <span class="material-symbols-outlined text-[20px]">lock</span>
 </div>
-\n<span class="text-red-400 text-xs mt-1 block" id="errorPassword"></span>
+<input autocomplete="current-password" class="w-full bg-surface-container-lowest/80 border border-outline-variant/30 text-on-surface placeholder-outline font-body-md text-body-md rounded-lg pl-10 pr-11 py-3 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary-container transition-all" id="password" placeholder="••••••••••••" required="" type="password" value="PolloControl2024!"/>
+<span class="text-red-400 text-xs mt-1 block" id="errorPassword"></span>
+<button aria-label="Alternar visibilidad de contraseña" class="absolute inset-y-0 right-0 pr-3 flex items-center text-outline hover:text-on-surface transition-colors focus:outline-none" id="togglePassword" type="button">
+<span class="material-symbols-outlined text-[20px]" id="eyeIcon">visibility</span>
+</button>
+</div>
 </div>
 <!-- Aux Options: Remember Session -->
 <div class="flex items-center justify-between pt-1">
@@ -237,7 +245,8 @@
 </div>
 <!-- Primary Action Button -->
 <div class="pt-2">
-<button class="w-full bg-primary-container text-surface-container-lowest font-headline-sm text-headline-sm font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed hover:shadow-lg hover:shadow-primary-container/20 active:scale-[0.99] transition-all duration-150 cursor-pointer" type="submit" id="btnLogin">
+<div id="authError" class="hidden bg-error/20 text-error p-3 rounded-lg text-body-sm mb-2 text-center"></div>
+<button type="submit" class="w-full bg-primary-container text-surface-container-lowest font-headline-sm text-headline-sm font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-fixed hover:shadow-lg hover:shadow-primary-container/20 active:scale-[0.99] transition-all duration-150 cursor-pointer" type="submit">
 <span>Ingresar al Sistema</span>
 <span class="material-symbols-outlined text-[20px]">login</span>
 </button>
@@ -295,121 +304,76 @@
 </footer>
 <!-- Micro-interactions Script for Password Toggle -->
 <script>
-    // ========================
-    // THEME
-    // ========================
-    const themeToggle = document.getElementById('themeToggle');
-    const saved = localStorage.getItem('pollos-theme') || 'dark';
-    if (saved === 'light') {
-      document.body.setAttribute('data-theme', 'light');
-      themeToggle.textContent = '☀️';
-    }
-    themeToggle.addEventListener('click', () => {
-      const isLight = document.body.getAttribute('data-theme') === 'light';
-      if (isLight) {
-        document.body.removeAttribute('data-theme');
-        themeToggle.textContent = '🌙';
-        localStorage.setItem('pollos-theme', 'dark');
-      } else {
-        document.body.setAttribute('data-theme', 'light');
-        themeToggle.textContent = '☀️';
-        localStorage.setItem('pollos-theme', 'light');
-      }
-    });
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
 
-    // ========================
-    // PASSWORD TOGGLE
-    // ========================
-    document.getElementById('togglePw').addEventListener('click', () => {
-      const pw = document.getElementById('password');
-      const btn = document.getElementById('togglePw');
-      if (pw.type === 'password') {
-        pw.type = 'text';
-        btn.textContent = '🙈';
-      } else {
-        pw.type = 'password';
-        btn.textContent = '👁️';
-      }
-    });
-
-    // ========================
-    // LOGIN FORM
-    // ========================
-    const form    = document.getElementById('loginForm');
-    const btnLogin = document.getElementById('btnLogin');
-    const alertBox = document.getElementById('alertError');
-    const alertMsg = document.getElementById('alertMsg');
-
-    // Si ya hay sesión activa, redirigir
-    const token = localStorage.getItem('pollos-token');
-    if (token) {
-      window.location.replace('/');
-    }
-
-    function showAlert(msg) {
-      alertMsg.textContent = msg;
-      alertBox.classList.remove('hidden');
-    }
-    function hideAlert() { alertBox.classList.add('hidden'); }
-    function setLoading(on) {
-      btnLogin.disabled = on;
-      btnLogin.classList.toggle('loading', on);
-    }
-    function clearErrors() {
-      hideAlert();
-      ['username','password'].forEach(f => {
-        document.getElementById(f).classList.remove('error');
-        document.getElementById(`error${f.charAt(0).toUpperCase() + f.slice(1)}`).textContent = '';
-      });
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      clearErrors();
-
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-
-      // Validaciones simples del cliente
-      let hasErr = false;
-      if (!username) {
-        document.getElementById('username').classList.add('error');
-        document.getElementById('errorUsername').textContent = 'El usuario es obligatorio';
-        hasErr = true;
-      }
-      if (!password) {
-        document.getElementById('password').classList.add('error');
-        document.getElementById('errorPassword').textContent = 'La contraseña es obligatoria';
-        hasErr = true;
-      }
-      if (hasErr) return;
-
-      setLoading(true);
-
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
+      if (toggleBtn && passwordInput && eyeIcon) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
         });
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          // Guardar token y datos del usuario
-          localStorage.setItem('pollos-token', data.token);
-          localStorage.setItem('pollos-user', JSON.stringify(data.user));
-          // Redirigir al dashboard
-          window.location.replace('/');
-        } else {
-          const msg = (data.errors && data.errors[0]) || data.error || 'Error al iniciar sesión';
-          showAlert(msg);
-          document.getElementById('password').value = '';
-        }
-      } catch (err) {
-        showAlert('Error de conexión. Verifica que el servidor esté activo.');
-      } finally {
-        setLoading(false);
       }
     });
   </script>
+
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('loginForm');
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const authError = document.getElementById('authError');
+        
+        document.getElementById('username').classList.remove('error');
+        document.getElementById('password').classList.remove('error');
+        document.getElementById('errorUsername').textContent = '';
+        document.getElementById('errorPassword').textContent = '';
+        authError.classList.add('hidden');
+        
+        let hasErr = false;
+        if (!username) {
+          document.getElementById('username').classList.add('error');
+          document.getElementById('errorUsername').textContent = 'El usuario es obligatorio';
+          hasErr = true;
+        }
+        if (!password) {
+          document.getElementById('password').classList.add('error');
+          document.getElementById('errorPassword').textContent = 'La contraseña es obligatoria';
+          hasErr = true;
+        }
+        
+        if (hasErr) return;
+        
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Ingresando...';
+        btn.disabled = true;
+        
+        try {
+          const res = await API.login(username, password);
+          if (res.success) {
+            window.location.href = '/index.html';
+          } else {
+            authError.textContent = res.message || 'Credenciales inválidas';
+            authError.classList.remove('hidden');
+          }
+        } catch (err) {
+          authError.textContent = 'Error de conexión con el servidor.';
+          authError.classList.remove('hidden');
+        } finally {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }
+      });
+    });
+  </script>
+
 </body></html>
